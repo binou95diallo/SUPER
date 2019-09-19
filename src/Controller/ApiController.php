@@ -19,22 +19,13 @@ class ApiController extends AbstractController
         $headers=apache_request_headers();
         $signatureProjet=$headers['Authorization'];
         $data=$request->request->all();
-        //generation signature pour la secirité API
-        $date=$data['date'];
-        $sha="6c2cef9fe21832a232da7386e4775654";
-        $cle_bin=pack('H*',$sha);
-        $algo="SHA256";
-        $code=$data['code'];
-        $message="cle_secrete=$sha";
-        $message .= "&date=$date";
-        $message.="&code=$code";
-        $signatureApi = strtoupper(hash_hmac(strtolower($algo), $message, $cle_bin));
-      //verification correspondance des clés
+        $reference=$data['reference']; 
+        $signatureApi=$this->generateSignature($reference);
+       //verification correspondance des clés
         if($signatureApi==$signatureProjet)
         {
-            $token=$data['token'];
             $conn = $this->getDoctrine()->getManager()->getConnection();
-            $dql="SELECT * FROM entreprise where token='$token'";
+            $dql="SELECT * FROM entreprise where reference='$reference'";
             $entreprise=$conn->prepare($dql);
             $entreprise->execute();
             $response=$entreprise->fetchAll();
@@ -44,5 +35,16 @@ class ApiController extends AbstractController
             $output = array('success' => false,'data'=>null);
         }
         return $this->Json($output);
+    }
+
+    public function generateSignature($reference)
+    {
+        $sha="6c2cef9fe21832a232da7386e4775654";
+        $cle_bin=pack('H*',$sha);
+        $algo="SHA256";
+        $message="cle_secrete=$sha";
+        $message.="&reference=$reference";
+        $signatureApi = strtoupper(hash_hmac(strtolower($algo), $message, $cle_bin));
+      
     }
 }
