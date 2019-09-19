@@ -44,7 +44,7 @@ class ApiController extends AbstractController
         $algo="SHA256";
         $message="cle_secrete=$sha";
         $message.="&reference=$reference";
-        $signatureApi = strtoupper(hash_hmac(strtolower($algo), $message, $cle_bin));
+        return strtoupper(hash_hmac(strtolower($algo), $message, $cle_bin));
       
     }
 }
