@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
 * @Route("/api", name="api")
@@ -34,7 +35,7 @@ class ApiController extends AbstractController
         else{
             $output = array('success' => false,'data'=>null);
         }
-        return $this->Json($output);
+        return new JsonResponse($output);
     }
 
     public function generateSignature($reference)
