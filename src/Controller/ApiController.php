@@ -26,7 +26,7 @@ class ApiController extends AbstractController
         if($signatureApi==$signatureProjet)
         {
             $conn = $this->getDoctrine()->getManager()->getConnection();
-            $dql="SELECT * FROM entreprise where raison_sociale='$reference'";
+            $dql="SELECT * FROM entreprise where reference='$reference'";
             $entreprise=$conn->prepare($dql);
             $entreprise->execute();
             $response=$entreprise->fetchAll();
